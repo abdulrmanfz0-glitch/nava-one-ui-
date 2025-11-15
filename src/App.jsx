@@ -7,6 +7,7 @@ import { BranchSelectionProvider } from './contexts/BranchSelectionContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { SubscriptionProvider } from './contexts/SubscriptionContext';
+import { AIChatProvider } from './contexts/AIChatContext';
 import Layout from './components/Layout/Layout';
 import LoadingSpinner from './components/UI/LoadingSpinner';
 import OfflineIndicator from './components/UI/OfflineIndicator';
@@ -150,10 +151,11 @@ export default function App() {
             <BranchSelectionProvider>
               <NotificationProvider>
                 <SubscriptionProvider>
-                  <BrowserRouter>
-                  <div className="App">
-                    <OfflineIndicator />
-                    <Suspense fallback={<GlobalLoading />}>
+                  <AIChatProvider>
+                    <BrowserRouter>
+                    <div className="App">
+                      <OfflineIndicator />
+                      <Suspense fallback={<GlobalLoading />}>
                   <Routes>
                   {/* صفحة تسجيل الدخول */}
                   <Route path="/login" element={<Login />} />
@@ -337,12 +339,13 @@ export default function App() {
                 </Suspense>
               </div>
               </BrowserRouter>
-            </SubscriptionProvider>
-          </NotificationProvider>
-        </BranchSelectionProvider>
-        </BrandProvider>
-      </AuthProvider>
-    </ThemeProvider>
-    </ErrorBoundary>
+            </AIChatProvider>
+          </SubscriptionProvider>
+        </NotificationProvider>
+      </BranchSelectionProvider>
+      </BrandProvider>
+    </AuthProvider>
+  </ThemeProvider>
+  </ErrorBoundary>
   );
 }

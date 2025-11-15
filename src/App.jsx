@@ -37,6 +37,7 @@ const GitOperations = lazy(() => import('./GitOperations'));
 const Subscriptions = lazy(() => import('./pages/Subscriptions'));
 const Billing = lazy(() => import('./pages/Billing'));
 const BrandSettings = lazy(() => import('./pages/BrandSettings'));
+const AIHub = lazy(() => import('./pages/AIHub'));
 
 // حارس متقدم للمسارات الخاصة
 function RequireAuth({ children, requiredPermissions = [] }) {
@@ -252,6 +253,15 @@ export default function App() {
                     <RequireAuth requiredPermissions={['reports:view']}>
                       <Layout>
                         <MenuIntelligence />
+                      </Layout>
+                    </RequireAuth>
+                  } />
+
+                  {/* AI Intelligence Hub - Smart Assistant */}
+                  <Route path="/ai-hub" element={
+                    <RequireAuth>
+                      <Layout>
+                        <AIHub />
                       </Layout>
                     </RequireAuth>
                   } />

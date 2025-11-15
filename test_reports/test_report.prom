@@ -1,0 +1,28 @@
+# HELP nava_ops_total_operations Total number of Git operations executed
+# TYPE nava_ops_total_operations counter
+nava_ops_total_operations 5 1762939943579
+
+# HELP nava_ops_successful_operations Number of successful Git operations
+# TYPE nava_ops_successful_operations counter
+nava_ops_successful_operations 4 1762939943579
+
+# HELP nava_ops_failed_operations Number of failed Git operations
+# TYPE nava_ops_failed_operations counter
+nava_ops_failed_operations 1 1762939943579
+
+# HELP nava_ops_success_rate Success rate of Git operations (0-100)
+# TYPE nava_ops_success_rate gauge
+nava_ops_success_rate 80.00 1762939943579
+
+# HELP nava_ops_duration_seconds Duration of operation in seconds
+# TYPE nava_ops_duration_seconds gauge
+nava_ops_duration_seconds 10.50 1762939943579
+
+# HELP nava_ops_repository_branches Number of branches per repository
+# TYPE nava_ops_repository_branches gauge
+nava_ops_repository_branches{repository="nava-ops"} 1 1762939943579
+
+# HELP nava_ops_operation_success Success count by operation type
+# TYPE nava_ops_operation_success counter
+nava_ops_operation_success{operation="fetch",result="success"} 1 1762939943579
+nava_ops_operation_success{operation="fetch",result="failed"} 0 1762939943579

@@ -1,0 +1,16 @@
+=== NAVA OPS REPORT SUMMARY ===
+Metric,Value
+Total Operations,5
+Successful Operations,4
+Failed Operations,1
+Success Rate,80.00%
+Total Branches,3
+Total Repositories,1
+Start Time,2025-11-12T09:32:23.578578
+End Time,2025-11-12T09:32:23.578581
+Duration,10.50s
+
+=== BRANCH OPERATIONS ===
+Repository,Branch,Operation,Success,Message,Timestamp,Error
+nava-ops,main,fetch,Yes,Fetch completed,2025-11-12T09:32:23.578583,
+

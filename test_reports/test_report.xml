@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<NavaOpsReport version="2.0" generated="2025-11-12T09:32:23.578786">
+  <Summary>
+    <total_operations>5</total_operations>
+    <successful_operations>4</successful_operations>
+    <failed_operations>1</failed_operations>
+    <success_rate>80.0</success_rate>
+    <total_branches>3</total_branches>
+    <total_repositories>1</total_repositories>
+    <start_time>2025-11-12T09:32:23.578578</start_time>
+    <end_time>2025-11-12T09:32:23.578581</end_time>
+    <duration_seconds>10.5</duration_seconds>
+  </Summary>
+  <BranchReports>
+    <Branch name="main" repository="nava-ops" success="False">
+      <Operations>
+        <Operation type="fetch" success="True" timestamp="2025-11-12T09:32:23.578583">
+          <Message>Fetch completed</Message>
+        </Operation>
+      </Operations>
+    </Branch>
+  </BranchReports>
+</NavaOpsReport>

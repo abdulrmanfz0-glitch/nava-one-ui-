@@ -965,6 +965,101 @@ export const billingNotificationsAPI = {
 };
 
 // ============================================================================
+// BRANCH-BASED PRICING API
+// ============================================================================
+
+export const branchBasedPricingAPI = {
+  /**
+   * Get pricing breakdown for user's brand based on branch count
+   */
+  async getUserPricing(userId) {
+    return apiRequest(
+      async () => {
+        const { data, error } = await supabase
+          .rpc('get_user_subscription_cost', { user_uuid: userId });
+
+        if (error) throw error;
+
+        return { data: data?.[0] || null, error: null };
+      },
+      'Failed to fetch user pricing'
+    );
+  },
+
+  /**
+   * Get pricing breakdown for a brand
+   */
+  async getBrandPricing(brandId) {
+    return apiRequest(
+      async () => {
+        const { data, error } = await supabase
+          .rpc('get_brand_pricing', { brand_uuid: brandId });
+
+        if (error) throw error;
+
+        return { data: data?.[0] || null, error: null };
+      },
+      'Failed to fetch brand pricing'
+    );
+  },
+
+  /**
+   * Calculate monthly price based on branch count (client-side)
+   */
+  calculateMonthlyPrice(branchCount) {
+    const BASE_PRICE = 299;
+    const ADDITIONAL_BRANCH_PRICE = 99;
+
+    if (branchCount < 1) branchCount = 1;
+    const additionalBranches = Math.max(0, branchCount - 1);
+
+    return BASE_PRICE + (additionalBranches * ADDITIONAL_BRANCH_PRICE);
+  },
+
+  /**
+   * Calculate yearly price with discount (client-side)
+   */
+  calculateYearlyPrice(branchCount, discountPercent = 17) {
+    const monthlyPrice = this.calculateMonthlyPrice(branchCount);
+    const yearlyPrice = monthlyPrice * 12;
+    const discountAmount = (yearlyPrice * discountPercent) / 100;
+
+    return yearlyPrice - discountAmount;
+  },
+
+  /**
+   * Get pricing breakdown (client-side calculation)
+   */
+  getPricingBreakdown(branchCount) {
+    const BASE_PRICE = 299;
+    const ADDITIONAL_BRANCH_PRICE = 99;
+    const additionalBranches = Math.max(0, branchCount - 1);
+    const monthlyTotal = this.calculateMonthlyPrice(branchCount);
+    const yearlyTotal = this.calculateYearlyPrice(branchCount);
+    const yearlySavings = (monthlyTotal * 12) - yearlyTotal;
+
+    return {
+      branchCount,
+      basePrice: BASE_PRICE,
+      additionalBranches,
+      additionalBranchCost: additionalBranches * ADDITIONAL_BRANCH_PRICE,
+      monthly: {
+        total: monthlyTotal,
+        perBranch: monthlyTotal / branchCount,
+        currency: 'SAR',
+      },
+      yearly: {
+        total: yearlyTotal,
+        savings: yearlySavings,
+        savingsPercent: 17,
+        perMonth: yearlyTotal / 12,
+        currency: 'SAR',
+      },
+    };
+  }
+};
+
+// ============================================================================
 // EXPORT ALL
 // ============================================================================
 
@@ -976,5 +1071,6 @@ export default {
   paymentMethods: paymentMethodsAPI,
   licenseKeys: licenseKeysAPI,
   events: subscriptionEventsAPI,
-  notifications: billingNotificationsAPI
+  notifications: billingNotificationsAPI,
+  branchPricing: branchBasedPricingAPI
 };

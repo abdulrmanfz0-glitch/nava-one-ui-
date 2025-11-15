@@ -2,6 +2,7 @@
 // Professional SaaS Analytics Dashboard with real-time insights
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBrand } from '@/contexts/BrandContext';
 import { useNotification } from '@/contexts/NotificationContext';
@@ -24,10 +25,12 @@ import {
   Download,
   Calendar,
   Eye,
-  Zap
+  Zap,
+  Brain
 } from 'lucide-react';
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const { userProfile } = useAuth();
   const { brand } = useBrand();
   const { addNotification } = useNotification();
@@ -210,6 +213,28 @@ export default function Dashboard() {
             </option>
           ))}
         </select>
+      </div>
+
+      {/* AI Intelligence Hub Card */}
+      <div
+        onClick={() => navigate('/ai-hub')}
+        className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl shadow-md p-6
+                   cursor-pointer transition-all duration-200 transform hover:scale-105 hover:shadow-lg"
+      >
+        <div className="flex items-center gap-4 text-white">
+          <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
+            <Brain className="w-8 h-8" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-xl font-bold mb-1">AI Intelligence Hub</h3>
+            <p className="text-white/90 text-sm">Your smart assistant for insights and predictions</p>
+          </div>
+          <div className="text-white/80">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </div>
       </div>
 
       {/* Key Metrics */}

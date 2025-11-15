@@ -1,7 +1,9 @@
 // src/components/Layout/Layout.jsx
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useBrand } from '../../contexts/BrandContext';
 import { Link, useLocation } from 'react-router-dom';
+import BranchSwitcher from '../BranchSwitcher/BranchSwitcher';
 import {
   LayoutDashboard,
   Store,
@@ -12,16 +14,19 @@ import {
   Bell,
   Crown,
   Menu,
-  X
+  X,
+  Building2
 } from 'lucide-react';
 
 export default function Layout({ children }) {
   const { user, userProfile, logout, isAdmin } = useAuth();
+  const { brand } = useBrand();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigation = [
     { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+    { name: 'Brand Overview', href: '/brand-overview', icon: Building2 },
     { name: 'Executive HQ', href: '/executive-hq', icon: Crown, premium: true },
     { name: 'Branches', href: '/branches', icon: Store },
     { name: 'Reports', href: '/reports', icon: FileText },
@@ -42,20 +47,52 @@ export default function Layout({ children }) {
       <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 fixed w-full top-0 z-30">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-4">
+            {/* Left: Mobile Menu + Brand */}
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
                 className="lg:hidden p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                NAVA Ops
-              </h1>
+
+              {/* Brand Logo */}
+              {brand?.brand_logo ? (
+                <img
+                  src={brand.brand_logo}
+                  alt={brand.brand_name || 'Brand'}
+                  className="h-10 w-10 rounded-lg object-cover"
+                />
+              ) : (
+                <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                  <Building2 className="w-6 h-6 text-white" />
+                </div>
+              )}
+
+              {/* Brand Name */}
+              <div className="hidden sm:block">
+                <h1 className="text-lg font-bold text-gray-900 dark:text-white">
+                  {brand?.brand_name || 'NAVA Ops'}
+                </h1>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Restaurant Management
+                </p>
+              </div>
             </div>
 
+            {/* Center: Branch Switcher (on larger screens) */}
+            <div className="hidden md:block">
+              <BranchSwitcher />
+            </div>
+
+            {/* Right: User Info + Logout */}
             <div className="flex items-center gap-4">
-              <div className="text-right">
+              {/* Mobile Branch Switcher */}
+              <div className="md:hidden">
+                <BranchSwitcher />
+              </div>
+
+              <div className="hidden sm:block text-right">
                 <p className="text-sm font-medium text-gray-900 dark:text-white">
                   {userProfile?.full_name || user?.email}
                 </p>
@@ -66,7 +103,7 @@ export default function Layout({ children }) {
 
               <button
                 onClick={logout}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 Logout
               </button>

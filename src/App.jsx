@@ -3,6 +3,7 @@ import React, { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { BrandProvider } from './contexts/BrandContext';
+import { BranchSelectionProvider } from './contexts/BranchSelectionContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { SubscriptionProvider } from './contexts/SubscriptionContext';
@@ -21,6 +22,7 @@ logger.info('Application started', {
 // Lazy loading للمكونات لتحسين الأداء
 const Login = lazy(() => import('./pages/Login'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
+const BrandOverview = lazy(() => import('./pages/BrandOverview'));
 const BranchesManagement = lazy(() => import('./pages/BranchesManagement'));
 const ReportsAnalytics = lazy(() => import('./pages/ReportsAnalyticsNew'));
 const ExecutiveDashboard = lazy(() => import('./pages/ExecutiveDashboard'));
@@ -144,13 +146,14 @@ export default function App() {
       <ThemeProvider>
         <AuthProvider>
           <BrandProvider>
-            <NotificationProvider>
-              <SubscriptionProvider>
-                <BrowserRouter>
-                <div className="App">
-                  <OfflineIndicator />
-                  <Suspense fallback={<GlobalLoading />}>
-                <Routes>
+            <BranchSelectionProvider>
+              <NotificationProvider>
+                <SubscriptionProvider>
+                  <BrowserRouter>
+                  <div className="App">
+                    <OfflineIndicator />
+                    <Suspense fallback={<GlobalLoading />}>
+                  <Routes>
                   {/* صفحة تسجيل الدخول */}
                   <Route path="/login" element={<Login />} />
 
@@ -159,6 +162,15 @@ export default function App() {
                     <RequireAuth>
                       <Layout>
                         <Dashboard />
+                      </Layout>
+                    </RequireAuth>
+                  } />
+
+                  {/* Brand Overview - Brand-level metrics */}
+                  <Route path="/brand-overview" element={
+                    <RequireAuth>
+                      <Layout>
+                        <BrandOverview />
                       </Layout>
                     </RequireAuth>
                   } />
@@ -317,6 +329,7 @@ export default function App() {
               </BrowserRouter>
             </SubscriptionProvider>
           </NotificationProvider>
+        </BranchSelectionProvider>
         </BrandProvider>
       </AuthProvider>
     </ThemeProvider>

@@ -1,9 +1,12 @@
 // src/components/Layout/Layout.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBrand } from '../../contexts/BrandContext';
+import { useAIChat } from '../../contexts/AIChatContext';
 import { Link, useLocation } from 'react-router-dom';
 import BranchSwitcher from '../BranchSwitcher/BranchSwitcher';
+import AIChatSidebar from '../AI/AIChatSidebar';
+import AIFloatingButton from '../AI/AIFloatingButton';
 import {
   LayoutDashboard,
   Store,
@@ -21,8 +24,22 @@ import {
 export default function Layout({ children }) {
   const { user, userProfile, logout, isAdmin } = useAuth();
   const { brand } = useBrand();
+  const { toggleSidebar } = useAIChat();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Keyboard shortcut: Ctrl+K to toggle AI Chat
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        toggleSidebar();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [toggleSidebar]);
 
   const navigation = [
     { name: 'Dashboard', href: '/', icon: LayoutDashboard },
@@ -171,6 +188,12 @@ export default function Layout({ children }) {
           </p>
         </div>
       </footer>
+
+      {/* AI Chat Sidebar */}
+      <AIChatSidebar />
+
+      {/* AI Floating Button */}
+      <AIFloatingButton />
     </div>
   );
 }

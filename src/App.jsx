@@ -39,6 +39,8 @@ const Subscriptions = lazy(() => import('./pages/Subscriptions'));
 const Billing = lazy(() => import('./pages/Billing'));
 const BrandSettings = lazy(() => import('./pages/BrandSettings'));
 const AIHub = lazy(() => import('./pages/AIHub'));
+const StaffCommandCenter = lazy(() => import('./pages/StaffCommandCenter'));
+const StaffPerformanceHub = lazy(() => import('./pages/StaffPerformanceHub'));
 
 // حارس متقدم للمسارات الخاصة
 function RequireAuth({ children, requiredPermissions = [] }) {
@@ -264,6 +266,24 @@ export default function App() {
                     <RequireAuth>
                       <Layout>
                         <AIHub />
+                      </Layout>
+                    </RequireAuth>
+                  } />
+
+                  {/* Staff Command Center */}
+                  <Route path="/staff-command" element={
+                    <RequireAuth requiredPermissions={['team:manage']}>
+                      <Layout>
+                        <StaffCommandCenter />
+                      </Layout>
+                    </RequireAuth>
+                  } />
+
+                  {/* Staff Performance Hub */}
+                  <Route path="/staff-performance" element={
+                    <RequireAuth requiredPermissions={['team:view']}>
+                      <Layout>
+                        <StaffPerformanceHub />
                       </Layout>
                     </RequireAuth>
                   } />

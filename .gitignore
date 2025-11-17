@@ -76,9 +76,10 @@ reports/
 *.json
 *.html
 *.md
-# But allow specific documentation files
+# But allow specific documentation and essential files
 !README.md
 !ARCHITECTURE.md
+!index.html
 
 # Node.js (for any Node-based tools)
 node_modules/

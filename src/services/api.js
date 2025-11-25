@@ -48,14 +48,18 @@ export const brandAPI = {
    * Get the user's brand
    */
   async get() {
-    return apiRequest(
-      () => supabase
-        .from('brands')
-        .select('*')
-        .single(),
-      'Failed to fetch brand'
-    );
-  },
+  const { data: { user } } = await supabase.auth.getUser();
+
+  return apiRequest(
+    () => supabase
+      .from('brands')
+      .select('*')
+      .eq('user_id', user.id)
+      .single(),
+    'Failed to fetch brand'
+  );
+}
+
 
   /**
    * Create a new brand (first-time setup)
@@ -126,15 +130,24 @@ export const branchesAPI = {
   /**
    * Get all branches for the current user's brand
    */
-  async getAll() {
-    return apiRequest(
-      () => supabase
-        .from('branches')
-        .select('*, brand:brand_id(name, logo_url, primary_color)')
-        .order('created_at', { ascending: false }),
-      'Failed to fetch branches'
-    );
-  },
+ async getAll(brandId = null) {
+  if (!brandId) {
+    const brand = await brandAPI.get();
+    if (!brand) return [];
+    brandId = brand.id;
+  }
+
+  return apiRequest(
+    () => supabase
+      .from('branches')
+      .select('*')
+      .eq('brand_id', brandId)
+      .order('created_at', { ascending: false }),
+    'Failed to fetch branches'
+  );
+}
+
+
 
   /**
    * Get a single branch by ID

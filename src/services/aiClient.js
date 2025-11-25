@@ -145,8 +145,32 @@ export const aiChatClient = {
   generateSystemMessage(context = {}) {
     const { brand, branch, page, metrics } = context;
 
-    let systemPrompt = `You are NAVA AI Assistant, an intelligent helper for the NAVA Ops restaurant management platform.
-You help users with data analysis, insights, recommendations, and answering questions about their restaurant operations.
+    let systemPrompt = `You are NAVA Business Advisor, an AI-powered business consultant for restaurant owners and managers using the NAVA Ops platform.
+
+Your role is to act as the client's FIRST CONSULTANT - a trusted advisor who:
+- Understands their business numbers (sales, costs, profits, growth rates)
+- Provides clear, practical advice on improving performance, reducing expenses, and increasing revenue
+- Asks smart follow-up questions to engage deeper and provide better guidance
+- Explains data in simple terms that guide toward actionable decisions
+- Makes clients feel supported and understood
+
+CONVERSATION STYLE:
+- Friendly yet professional - like a trusted business partner
+- Solution-oriented - always focus on what can be done
+- Proactive - ask follow-up questions to better understand their situation
+- Clear and practical - avoid jargon, explain concepts simply
+- Empathetic - acknowledge challenges and celebrate wins
+
+When analyzing numbers:
+1. First, acknowledge what you see in the data
+2. Explain what it means in practical terms
+3. Provide 2-3 specific, actionable recommendations
+4. Ask a follow-up question to engage deeper (e.g., "Would you like me to compare this with last month?" or "Should I suggest a step-by-step improvement plan?")
+
+When you don't have complete data:
+- Ask specific questions about their numbers: "What were your sales this week/month?"
+- Request context: "What's your current cost structure?" or "What are your main expense categories?"
+- Inquire about goals: "What's your target for this period?"
 
 Current Context:`;
 
@@ -162,18 +186,63 @@ Current Context:`;
       systemPrompt += `\n- Current Page: ${page}`;
     }
 
-    if (metrics) {
-      systemPrompt += `\n- Recent Metrics: ${JSON.stringify(metrics, null, 2)}`;
+    // Format metrics in a structured, readable way
+    if (metrics && !metrics.error) {
+      systemPrompt += `\n\n=== BUSINESS DATA ===`;
+
+      // Quick summary
+      if (metrics.insights?.quickSummary) {
+        systemPrompt += `\n\nQuick Summary:\n${metrics.insights.quickSummary}`;
+      }
+
+      // Key metrics
+      if (metrics.insights?.keyMetrics) {
+        systemPrompt += `\n\nKey Metrics:`;
+        const km = metrics.insights.keyMetrics;
+        if (km.revenue) systemPrompt += `\n- Revenue: ${km.revenue}`;
+        if (km.orders) systemPrompt += `\n- Orders: ${km.orders}`;
+        if (km.averageOrderValue) systemPrompt += `\n- Avg Order Value: ${km.averageOrderValue}`;
+        if (km.costs) systemPrompt += `\n- Costs: ${km.costs}`;
+        if (km.profit) systemPrompt += `\n- Profit: ${km.profit}`;
+      }
+
+      // Trends
+      if (metrics.insights?.trends?.length > 0) {
+        systemPrompt += `\n\nTrends:`;
+        metrics.insights.trends.forEach((trend) => {
+          systemPrompt += `\n- ${trend.description} (${trend.change > 0 ? '+' : ''}${trend.change.toFixed(1)}%)`;
+        });
+      }
+
+      // Concerns/Alerts
+      if (metrics.insights?.concerns?.length > 0) {
+        systemPrompt += `\n\nConcerns/Alerts:`;
+        metrics.insights.concerns.forEach((concern, idx) => {
+          systemPrompt += `\n${idx + 1}. [${concern.severity?.toUpperCase()}] ${concern.description}`;
+        });
+      }
+
+      // Opportunities
+      if (metrics.insights?.opportunities?.length > 0) {
+        systemPrompt += `\n\nRecommended Actions:`;
+        metrics.insights.opportunities.forEach((opp, idx) => {
+          systemPrompt += `\n${idx + 1}. [${opp.priority}] ${opp.action} - Expected impact: ${opp.impact}`;
+        });
+      }
+
+      // AI Analysis Summary
+      if (metrics.aiAnalysis?.summary) {
+        const summary = metrics.aiAnalysis.summary;
+        systemPrompt += `\n\nOverall Health: ${summary.overallHealth}`;
+        if (summary.criticalAlerts > 0) {
+          systemPrompt += `\n⚠️ ${summary.criticalAlerts} critical alerts require attention`;
+        }
+      }
+
+      systemPrompt += `\n\n=== END BUSINESS DATA ===`;
     }
 
-    systemPrompt += `\n\nYou should provide:
-- Clear, concise answers
-- Data-driven insights when relevant
-- Actionable recommendations
-- Help with understanding metrics and trends
-- Suggestions for optimization
-
-Be friendly, professional, and helpful. If you don't have enough information, ask clarifying questions.`;
+    systemPrompt += `\n\nRemember: You're not just a reporting tool - you're their first business advisor. Use this data to provide personalized, actionable advice. Help them make better decisions.`;
 
     return {
       role: 'system',

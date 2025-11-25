@@ -18,7 +18,7 @@ export default function AIFloatingButton() {
           ? 'bg-gray-600 hover:bg-gray-700'
           : 'bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700'
       }`}
-      aria-label={isOpen ? 'Close AI Assistant' : 'Open AI Assistant'}
+      aria-label={isOpen ? 'Close Business Advisor' : 'Open Business Advisor'}
     >
       <div className="relative w-full h-full flex items-center justify-center">
         {/* Pulsing ring animation when closed */}
@@ -41,7 +41,7 @@ export default function AIFloatingButton() {
 
       {/* Tooltip */}
       <div className="absolute bottom-full right-0 mb-2 px-3 py-1.5 bg-gray-900 dark:bg-gray-700 text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
-        {isOpen ? 'Close AI Assistant' : 'AI Assistant (Ctrl+K)'}
+        {isOpen ? 'Close Business Advisor' : 'Business Advisor (Ctrl+K)'}
         <div className="absolute top-full right-4 w-2 h-2 bg-gray-900 dark:bg-gray-700 transform rotate-45 -mt-1"></div>
       </div>
     </button>

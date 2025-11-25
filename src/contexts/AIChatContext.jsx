@@ -5,6 +5,7 @@
 
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { aiChatClient } from '@/services/aiClient';
+import { getBusinessMetricsForAdvisor } from '@/services/advisorMetricsService';
 import { logger } from '@/lib/logger';
 import { useBrand } from './BrandContext';
 import { useBranchSelection } from './BranchSelectionContext';
@@ -83,10 +84,26 @@ export function AIChatProvider({ children }) {
       setMessages((prev) => [...prev, newUserMessage]);
 
       try {
-        // Prepare messages for API
+        // Fetch business metrics for rich context
+        let businessMetrics = null;
+        try {
+          businessMetrics = await getBusinessMetricsForAdvisor({
+            branchId: selectedBranch?.id || null,
+            includePredictions: true,
+            includeAnomalies: true,
+            includeRecommendations: true,
+            timeframe: 'current',
+          });
+          logger.info('Fetched business metrics for AI advisor', businessMetrics);
+        } catch (metricsError) {
+          logger.warn('Could not fetch business metrics', metricsError);
+        }
+
+        // Prepare context with metrics
         const context = {
           brand,
           branch: selectedBranch,
+          metrics: businessMetrics,
           ...currentContext,
         };
 

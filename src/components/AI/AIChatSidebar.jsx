@@ -7,25 +7,43 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useAIChat } from '../../contexts/AIChatContext';
 import { X, Send, Sparkles, Trash2, Loader2 } from 'lucide-react';
 
-// Quick suggestion templates
+// Quick suggestion templates - Business Advisor focused
 const QUICK_SUGGESTIONS = [
   {
-    id: 'performance',
+    id: 'business-health',
+    icon: '💼',
+    title: 'Business Health Check',
+    prompt: "Act as my business consultant and give me a comprehensive health check. Analyze my current performance, identify areas of concern, and provide specific recommendations to improve. Then ask me follow-up questions to better understand my business situation.",
+  },
+  {
+    id: 'revenue-growth',
+    icon: '📈',
+    title: 'Grow My Revenue',
+    prompt: 'I want to increase my revenue. As my advisor, analyze my current numbers, explain where the opportunities are, and give me a step-by-step plan with 3-5 actionable strategies I can implement this week. What else do you need to know to help me better?',
+  },
+  {
+    id: 'reduce-costs',
+    icon: '💰',
+    title: 'Reduce My Costs',
+    prompt: 'Help me reduce costs without hurting quality. Review my expense structure, identify where I might be overspending, and suggest practical ways to cut costs. Ask me questions about my operations to give better advice.',
+  },
+  {
+    id: 'performance-issues',
+    icon: '🔍',
+    title: 'Diagnose Issues',
+    prompt: "Something feels off with my performance. Act as my consultant - look at my data, identify potential problems, explain what might be causing them, and recommend solutions. What specific numbers should I share with you?",
+  },
+  {
+    id: 'compare-periods',
     icon: '📊',
-    title: 'Analyze Performance',
-    prompt: "Analyze today's performance and give me key insights",
+    title: 'Compare Performance',
+    prompt: 'Compare my current performance with previous periods. Explain the trends you see, what they mean for my business, and whether I should be concerned or celebrate. What actions should I take based on these trends?',
   },
   {
-    id: 'sales-drop',
-    icon: '📉',
-    title: 'Sales Analysis',
-    prompt: 'Why did sales drop yesterday? What could be the reasons?',
-  },
-  {
-    id: 'optimization',
-    icon: '💡',
-    title: 'Optimization Ideas',
-    prompt: 'Give me optimization ideas for this branch to improve revenue and efficiency',
+    id: 'smart-insights',
+    icon: '✨',
+    title: 'Smart Insights',
+    prompt: "Give me your top 3 insights about my business right now - what's working well, what needs attention, and what opportunities I might be missing. Then suggest specific actions I can take today.",
   },
 ];
 
@@ -106,8 +124,8 @@ export default function AIChatSidebar() {
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">AI Assistant</h2>
-              <p className="text-xs text-white/80">Ask me anything</p>
+              <h2 className="text-lg font-bold text-white">Business Advisor</h2>
+              <p className="text-xs text-white/80">Your trusted consultant</p>
             </div>
           </div>
           <button
@@ -119,27 +137,29 @@ export default function AIChatSidebar() {
           </button>
         </header>
 
-        {/* Quick Suggestions (shown when no messages) */}
+        {/* Advisor Suggestions (shown when no messages) */}
         {messages.length === 0 && (
-          <div className="px-6 py-4 space-y-3">
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Quick Actions
-            </p>
-            <div className="grid gap-2">
+          <div className="px-6 py-4 space-y-4">
+            <div>
+              <p className="text-sm font-bold text-gray-900 dark:text-white mb-1">
+                How can I help you today?
+              </p>
+              <p className="text-xs text-gray-600 dark:text-gray-400">
+                Choose a topic or ask me anything about your business
+              </p>
+            </div>
+            <div className="grid gap-2 max-h-[calc(100vh-280px)] overflow-y-auto pr-2">
               {QUICK_SUGGESTIONS.map((suggestion) => (
                 <button
                   key={suggestion.id}
                   onClick={() => handleSuggestionClick(suggestion)}
                   disabled={isLoading}
-                  className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-left disabled:opacity-50 disabled:cursor-not-allowed group"
+                  className="flex items-center gap-3 px-4 py-3 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-700/30 hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-900/20 dark:hover:to-purple-900/20 border border-gray-200 dark:border-gray-600 hover:border-indigo-300 dark:hover:border-indigo-700 rounded-xl transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed group shadow-sm hover:shadow-md"
                 >
-                  <span className="text-2xl">{suggestion.icon}</span>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                  <span className="text-2xl flex-shrink-0">{suggestion.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                       {suggestion.title}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">
-                      {suggestion.prompt}
                     </p>
                   </div>
                 </button>

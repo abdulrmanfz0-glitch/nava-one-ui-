@@ -13,16 +13,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react({
         // تحسينات إضافية لـ React
-        jsxRuntime: 'automatic',
-        babel: {
-          plugins: [
-            ['babel-plugin-styled-components', {
-              ssr: false,
-              displayName: true,
-              preprocess: false
-            }]
-          ]
-        }
+        jsxRuntime: 'automatic'
       }),
 
       // PWA - تطبيق ويب تقدمي
